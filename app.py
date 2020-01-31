@@ -13,7 +13,7 @@ api = Api(app)
 
 # configurations 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or"sqlite:///generate.sqlite3"
-app.config['SECRET_KEY'] = "ABCD 12345"
+app.config['SECRET_KEY'] = "abcd1234"
 
 
 # instantiating the SQLAlchemy Class in db 
@@ -24,9 +24,10 @@ class generate_pin(Resource):
 
     def post(self):
 
-        # the random funtion generates random 15 digits mixture of string and digits
+        # the uuid funtion generates random 15 digits numbers
         a=str(uuid.uuid4().int)
         a.split()
+        # specifying the length of numbers from uuid generated
         pin = a[:15]
         # creating a variable data and saving the value of the randomly generated pin
         data = generate(pin)
@@ -44,11 +45,8 @@ class generate_pin(Resource):
         s_n = result.id
         return {'pin': pin, "SN":s_n }
         
- 
+api.add_resource(generate_pin, '/api/generator') 
 
-
-
-api.add_resource(generate_pin, '/api/generate') 
 
 class validate_pin(Resource):
     def post(self):
@@ -71,7 +69,7 @@ class validate_pin(Resource):
         else:
             return{"response": 0}    
 
-api.add_resource(validate_pin, '/api/generate/validate')         
+api.add_resource(validate_pin, '/api/validator')         
     
 
 
