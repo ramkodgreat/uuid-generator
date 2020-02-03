@@ -22,7 +22,7 @@ db=SQLAlchemy(app)
 # this API is suppose to generate a random 
 class generate_pin(Resource):
 
-    def post(self):
+    def get(self):
 
         # the uuid funtion generates random 15 digits numbers
         a=str(uuid.uuid4().int)
@@ -48,28 +48,63 @@ class generate_pin(Resource):
 api.add_resource(generate_pin, '/api/generator') 
 
 
-class validate_pin(Resource):
-    def post(self):
+class snValidator(Resource):
+    def get(self,pin):
         # instantiating the request.get_json method to enable user to enter needed information
-        request_data = request.get_json()
+        #request_data = request.get_json()
 
         # requesting a pin from user for validation
-        pin = request_data['pin']
-        sn = request_data['sn']
+        #pin = request_data['pin']
+        #sn = request_data['sn']
 
         # searching for that paticular pin in the database
         result1 = generate.query.filter_by(pin = pin).first()
-        result2 = generate.query.filter_by(id = sn).first()
+        #result2 = generate.query.filter_by(id = sn).first()
         
         # if pin is found it returns 1 for success
-        if result1 == result2:
+        if result1 :
             return{"response":1}
 
         # else if pin is not found it returns o to represent failure
         else:
             return{"response": 0}    
 
-api.add_resource(validate_pin, '/api/validator')         
+    def get(self,sn):
+        # instantiating the request.get_json method to enable user to enter needed information
+        #request_data = request.get_json()
+
+        # requesting a pin from user for validation
+        #pin = request_data['pin']
+        #sn = request_data['sn']
+
+        # searching for that paticular pin in the database
+        #result1 = generate.query.filter_by(pin = pin).first()
+        result2 = generate.query.filter_by(id = sn).first()
+        
+        # if pin is found it returns 1 for success
+        if result2 :
+            return{"response":1}
+
+        # else if pin is not found it returns o to represent failure
+        else:
+            return{"response": 0}    
+api.add_resource(snValidator, '/api/validsn/<string:sn>') 
+
+class pinValidator(Resource):
+    def get(self,pin):
+
+        # searching for that paticular pin in the database
+        result1 = generate.query.filter_by(pin = pin).first()
+        
+        # if pin is found it returns 1 for success
+        if result1 :
+            return{"response":1}
+
+        # else if pin is not found it returns o to represent failure
+        else:
+            return{"response": 0}    
+
+api.add_resource(pinValidator, '/api/validpin/<string:pin>')         
     
 
 
